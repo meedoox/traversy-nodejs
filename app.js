@@ -1,8 +1,24 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
 
+mongoose.connect('mongodb://localhost/nodejs-traversy');
+let db = mongoose.connection;
+
+// Check connection
+db.once('open', () => {
+  console.log('Connected to mongoDB');
+});
+
+// Check for db errors
+db.on('error', (error) => {
+  console.log(error);
+});
 // Init app
 const app = express();
+
+// Models
+const Article = require('./models/article');
 
 // Load view engine
 app.set('views', path.join(__dirname, 'views'));
@@ -10,27 +26,13 @@ app.set('view engine', 'pug');
 
 // Home route
 app.get('/', (req, res) => {
-  let articles = [
-    {
-      id: 1,
-      title: 'Article #1',
-      author: 'Matyas Herman',
-      body: 'This is article 1',
-    },
-    {
-      id: 2,
-      title: 'Article #2',
-      author: 'Matyas Herman',
-      body: 'This is article 2',
-    },
-    {
-      id: 3,
-      title: 'Article #3',
-      author: 'Matyas Herman',
-      body: 'This is article 3',
-    },
-  ];
-  res.render('index', { title: 'Homepage', articles: articles });
+  Article.find({}, (err, articles) => {
+    if (err) {
+      console.log('Error ' + err);
+    } else {
+      res.render('index', { title: 'Homepage', articles: articles });
+    }
+  });
 });
 
 // Add Article route
