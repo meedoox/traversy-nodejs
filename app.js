@@ -86,7 +86,6 @@ app.post('/articles/add', (req, res) => {
   });
 });
 
-
 // POST Update Article route
 app.post('/article/edit/:id', (req, res) => {
   let article = {};
@@ -94,7 +93,7 @@ app.post('/article/edit/:id', (req, res) => {
   article.author = req.body.author;
   article.body = req.body.body;
 
-  let query = {_id: req.params.id}
+  let query = { _id: req.params.id };
   Article.update(query, article, (err) => {
     if (err) {
       console.log(err);
@@ -105,6 +104,17 @@ app.post('/article/edit/:id', (req, res) => {
   });
 });
 
+app.delete('/article/:id', (req, res) => {
+  let query = { _id: req.params.id };
+
+  Article.remove(query, (err) => {
+    if (err) {
+      console.log(err);
+    }
+
+    res.send('Success');
+  });
+});
 
 // Start server
 app.listen(3000, () => {
