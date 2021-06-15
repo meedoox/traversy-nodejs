@@ -54,6 +54,16 @@ app.get('/article/:id', (req, res) => {
   });
 });
 
+// Edit Article
+app.get('/article/edit/:id', (req, res) => {
+  Article.findById(req.params.id, (err, article) => {
+    res.render('edit_article', {
+      title: 'Edit Article - ' + article.title,
+      article: article,
+    });
+  });
+});
+
 // Add Article route
 app.get('/articles/add', (req, res) => {
   res.render('add_article', { title: 'Add Article' });
@@ -75,6 +85,26 @@ app.post('/articles/add', (req, res) => {
     }
   });
 });
+
+
+// POST Update Article route
+app.post('/article/edit/:id', (req, res) => {
+  let article = {};
+  article.title = req.body.title;
+  article.author = req.body.author;
+  article.body = req.body.body;
+
+  let query = {_id: req.params.id}
+  Article.update(query, article, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    } else {
+      res.redirect('/');
+    }
+  });
+});
+
 
 // Start server
 app.listen(3000, () => {
