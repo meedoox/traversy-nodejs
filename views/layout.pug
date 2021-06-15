@@ -2,10 +2,30 @@ doctype html
 html 
     head 
         title Node.js Knowledge Base
+        link(rel="stylesheet", href="/bower_components/bootstrap/dist/css/bootstrap.css")
 
     body
-        block content
-        br
-        hr
-        footer 
-            p Copyright &copy; 2021
+        nav.navbar.navbar-expand-lg.navbar-light.bg-light
+            .container-fluid
+                a.navbar-brand(href='/') Knowledge Base
+                button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
+                    span.navbar-toggler-icon
+                #navbarNav.collapse.navbar-collapse
+                ul.navbar-nav
+                    li.nav-item
+                    a.nav-link(aria-current='page' href='/') Home
+                    li.nav-item
+                    a.nav-link(href='/articles/add') Add Article
+                    li.nav-item
+                    a.nav-link(href='#') Contact
+                    li.nav-item
+
+
+        .container
+            block content
+            br
+            hr
+            footer 
+                p Copyright &copy; 2021
+
+        script(src="/bower_components/bootstrap/dist/js/bootstrap.js")
