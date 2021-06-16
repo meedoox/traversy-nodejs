@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 mongoose.connect('mongodb://localhost/nodejs-traversy');
 let db = mongoose.connection;
@@ -33,6 +36,42 @@ app.use(bodyParser.json());
 
 // Set Public folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Express session middleware
+app.use(
+  session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+// Express Messages Middleware
+app.use(require('connect-flash')());
+app.use((req, res, next) => {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Express Validator Middleware
+app.use(
+  expressValidator({
+    errorFormatter: (param, msg, value) => {
+      let namespace = param.split('.'),
+        root = namespace.shift(),
+        formParam = root;
+
+      while (namespace.length) {
+        formParam += '[' + namespace.shift() + ']';
+      }
+      return {
+        param: formParam,
+        msg: msg,
+        value: value,
+      };
+    },
+  })
+);
 
 // Home route
 app.get('/', (req, res) => {
@@ -81,6 +120,7 @@ app.post('/articles/add', (req, res) => {
       console.log(err);
       return;
     } else {
+      req.flash('success', 'Article Added');
       res.redirect('/');
     }
   });
@@ -99,6 +139,7 @@ app.post('/article/edit/:id', (req, res) => {
       console.log(err);
       return;
     } else {
+      req.flash('success', 'Article Updated');
       res.redirect('/');
     }
   });
