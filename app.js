@@ -84,78 +84,9 @@ app.get('/', (req, res) => {
   });
 });
 
-// Get Article
-app.get('/article/:id', (req, res) => {
-  Article.findById(req.params.id, (err, article) => {
-    res.render('article', {
-      article: article,
-    });
-  });
-});
-
-// Edit Article
-app.get('/article/edit/:id', (req, res) => {
-  Article.findById(req.params.id, (err, article) => {
-    res.render('edit_article', {
-      title: 'Edit Article - ' + article.title,
-      article: article,
-    });
-  });
-});
-
-// Add Article route
-app.get('/articles/add', (req, res) => {
-  res.render('add_article', { title: 'Add Article' });
-});
-
-// POST Add Article route
-app.post('/articles/add', (req, res) => {
-  let article = new Article();
-  article.title = req.body.title;
-  article.author = req.body.author;
-  article.body = req.body.body;
-
-  article.save((err) => {
-    if (err) {
-      console.log(err);
-      return;
-    } else {
-      req.flash('success', 'Article Added');
-      res.redirect('/');
-    }
-  });
-});
-
-// POST Update Article route
-app.post('/article/edit/:id', (req, res) => {
-  let article = {};
-  article.title = req.body.title;
-  article.author = req.body.author;
-  article.body = req.body.body;
-
-  let query = { _id: req.params.id };
-  Article.update(query, article, (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    } else {
-      req.flash('success', 'Article Updated');
-      res.redirect('/');
-    }
-  });
-});
-
-app.delete('/article/:id', (req, res) => {
-  let query = { _id: req.params.id };
-
-  Article.remove(query, (err) => {
-    if (err) {
-      console.log(err);
-    }
-
-    res.send('Success');
-  });
-});
+// Route Files
+let articles = require('./routes/articles');
+app.use('/articles', articles);
 
 // Start server
 app.listen(3000, () => {
