@@ -3,16 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // Bring in Article Model
-let Article = require('../models/article')
-
-// Get Article
-router.get('/:id', (req, res) => {
-  Article.findById(req.params.id, (err, article) => {
-    res.render('article', {
-      article: article,
-    });
-  });
-});
+let Article = require('../models/article');
 
 // Edit Article
 router.get('/edit/:id', (req, res) => {
@@ -88,5 +79,13 @@ router.delete('/:id', (req, res) => {
   });
 });
 
+// Get Article
+router.get('/:id', (req, res) => {
+  Article.findById(req.params.id, (err, article) => {
+    res.render('article', {
+      article: article,
+    });
+  });
+});
 
 module.exports = router;
