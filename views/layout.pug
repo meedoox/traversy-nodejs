@@ -22,10 +22,14 @@ html
                     li.nav-item
                 
                 ul.navbar-nav
-                    li 
-                        a.nav-link(href="/users/register") Register
-                    li 
-                        a.nav-link(href="/users/login") Login
+                    if user
+                        li 
+                            a.nav-link(href='/users/logout') Logout
+                    else
+                        li 
+                            a.nav-link(href="/users/register") Register
+                        li 
+                            a.nav-link(href="/users/login") Login
 
 
         .container

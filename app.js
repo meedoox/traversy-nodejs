@@ -6,7 +6,10 @@ const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
 
-mongoose.connect('mongodb://localhost/nodejs-traversy');
+const passport = require('passport');
+const config = require('./config/database');
+
+mongoose.connect(config.database);
 let db = mongoose.connection;
 
 // Check connection
@@ -72,6 +75,18 @@ app.use(
     },
   })
 );
+
+// Passport config
+require('./config/passport')(passport);
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('*', (req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
 
 // Home route
 app.get('/', (req, res) => {
